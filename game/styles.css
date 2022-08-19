@@ -136,6 +136,11 @@ button.wide-button {
   display: block;
 }
 
+.grey {
+  border: none;
+  background-color: var(--grey) !important;
+}
+
 .yellow {
   border: none;
   background-color: var(--yellow) !important;
@@ -144,9 +149,4 @@ button.wide-button {
 .green {
   border: none;
   background-color: var(--green) !important;
-}
-
-.grey {
-  border: none;
-  background-color: var(--grey) !important;
 }

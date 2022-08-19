@@ -62,6 +62,10 @@ function getTileColour(letter, index, word) {
     if (word.split("")[i] == letter) lettersBeforeIndex += 1;
   }
 
+  for (let i = index + 1; i < 5; i++) {
+    if (word.split("")[i] == letter && wordToBeGuessed.split("")[i] == letter) lettersBeforeIndex += 1;
+  }
+
   if (lettersBeforeIndex < lettersInWord) return "yellow";
 
   return "grey";
