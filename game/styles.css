@@ -56,7 +56,7 @@ header {
   font-size: 40px;
   font-weight: 700;
   display: flex;
-  align-content: center;
+  align-items: center;
   justify-content: center;
   color: var(--white);
   border: 2px solid var(--grey);
@@ -74,21 +74,6 @@ header {
   display: grid;
   gap: 5px;
   grid-template-columns: repeat(5, 1fr);
-}
-
-.yellow {
-  border: none;
-  background-color: var(--yellow);
-}
-
-.green {
-  border: none;
-  background-color: var(--green);
-}
-
-.grey {
-  border: none;
-  background-color: var(--grey);
 }
 
 #game {
@@ -137,15 +122,31 @@ button.wide-button {
 .win-screen {
   font-size: 4rem;
   left: 50%;
-  top: 30%;
-  transform: translateX(-50%) translateY(-100vh);
+  top: -30%;
+  transform: translateX(-50%);
   color: aqua;
   position: absolute;
 }
 
 .show {
+  transition: all 1s ease;
   z-index: 999;
-  transition: all 1s ease-out;
+  top: 30%;
   transform: translateX(-50%) rotate(1070deg);
   display: block;
+}
+
+.yellow {
+  border: none;
+  background-color: var(--yellow) !important;
+}
+
+.green {
+  border: none;
+  background-color: var(--green) !important;
+}
+
+.grey {
+  border: none;
+  background-color: var(--grey) !important;
 }

@@ -80,6 +80,8 @@ function handleSubmitWord() {
         setTimeout(() => {
           const colour = getTileColour(letter, index, word);
           const currentSquare = document.querySelector(`#square_${row}_${index}`);
+          const key = document.querySelector(`#${letter}`);
+          key.classList.add(colour);
           currentSquare.classList.add("animate__flipInX");
           currentSquare.classList.add(colour);
         }, interval * index);
