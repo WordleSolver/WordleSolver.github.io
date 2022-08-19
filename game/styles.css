@@ -52,7 +52,7 @@ header {
   font-size: 2rem;
   font-weight: 700;
   aspect-ratio: 1 / 1;
-  min-width: 50px;
+  min-width: 60px;
   font-size: 40px;
   font-weight: 700;
   display: flex;
@@ -138,7 +138,7 @@ button.wide-button {
   font-size: 4rem;
   left: 50%;
   top: 30%;
-  transform: translateX(-50%) translateY(-40vh);
+  transform: translateX(-50%) translateY(-100vh);
   color: aqua;
   position: absolute;
 }
