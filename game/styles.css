@@ -119,23 +119,6 @@ button.wide-button {
   flex-grow: 0.5;
 }
 
-.win-screen {
-  font-size: 4rem;
-  left: 50%;
-  top: -30%;
-  transform: translateX(-50%);
-  color: aqua;
-  position: absolute;
-}
-
-.show {
-  transition: all 1s ease;
-  z-index: 999;
-  top: 30%;
-  transform: translateX(-50%) rotate(1070deg);
-  display: block;
-}
-
 .grey {
   border: none;
   background-color: var(--grey) !important;

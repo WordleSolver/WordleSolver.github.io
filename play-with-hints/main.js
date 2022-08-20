@@ -11,22 +11,9 @@ function createSquares() {
       square.classList.add("square");
       square.classList.add("animate__animated");
       square.setAttribute("id", `square_${i}_${j}`);
-      square.addEventListener("mousedown", changeColourMap);
       row.appendChild(square);
     }
     gameBoard.appendChild(row);
-  }
-}
-
-function changeColourMap(e) {
-  const squareID = e.target.id;
-  const [row, column] = squareID.match(/\d/g);
-  console.log(squareID, row, column, guessedWords.length - 1);
-  if (row == guessedWords.length - 1) {
-    console.log(currentColourMap[column]);
-    currentColourMap[column] = (currentColourMap[column] + 1)%4;
-    const colour = numToColour[currentColourMap[column]];
-    e.target.classList = "square " + colour;
   }
 }
 
@@ -56,13 +43,9 @@ const wordToBeGuessed = possibleWords[Math.floor(Math.random()*possibleWords.len
 
 const guessedWords = [[]];
 
-const numToColour = {2:"green", 1:"yellow", 0:"grey", 3:""}
+const numToColour = {2:"green", 1:"yellow", 0:"grey"}
 
 const suggestionListElement = document.querySelector("#suggestion-list");
-
-let currentColourMap = [3, 3, 3, 3, 3];
-
-let changeingColours = false;
 
 function buildSuggestionListElement(suggestionList) {
   suggestionListElement.innerHTML = suggestionList.filter((arr, index) => index < 10).map(arr => {
@@ -218,28 +201,37 @@ function quickFindRemaingWord(guess, currentColourMap, reducedWordList) {
   });
 }
 
-
 function handleSubmitWord() {
   const currentWord = getCurrentWordArr();
 
   if (currentWord && currentWord.length == 5) {
+    const word = currentWord.join("");
 
-    if (currentColourMap.includes(3) == false) {
-      const word = currentWord.join("");
-
-      if (validWords.includes(word)) {
-        const interval = 150;
-        const row = guessedWords.length - 1;
-        reducedWordList = findRemaingWord(word, currentColourMap, reducedWordList);
-        buildSuggestionListElement(makeSuggestionList(reducedWordList)); 
-        const entrapyRemaining = entrapyArray(reducedWordList.map(arr => arr[1]));
-        console.log(entrapyRemaining);
-        guessedWords.push([]);
-        currentColourMap = [3, 3, 3, 3, 3];
+    if (validWords.includes(word)) {
+      const interval = 150;
+      const row = guessedWords.length - 1;
+      const currentColourMap = createColourMap(word, wordToBeGuessed);
+      reducedWordList = findRemaingWord(word, currentColourMap, reducedWordList);
+      buildSuggestionListElement(makeSuggestionList(reducedWordList)); 
+      const entrapyRemaining = entrapyArray(reducedWordList.map(arr => arr[1]));
+      console.log(entrapyRemaining);
+      currentWord.forEach((letter, index) => {
+        setTimeout(() => {
+          const colour = getTileColour(letter, index, word);
+          const currentSquare = document.querySelector(`#square_${row}_${index}`);
+          const key = document.querySelector(`#${letter}`);
+          key.classList.add(colour);
+          currentSquare.classList.add("animate__flipInX");
+          currentSquare.classList.add(colour);
+        }, interval * index);
+      })
+      guessedWords.push([]);
+      if (guessedWords.length == 7 && word != wordToBeGuessed){
+        window.alert(`Sorry, you have no more guesses. The word was ${wordToBeGuessed}`)
       }
-      else {
-        window.alert("The Word Is Not Valid");
-      }
+    }
+    else {
+      window.alert("The Word Is Not Valid");
     }
   }
   else {

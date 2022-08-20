@@ -90,14 +90,8 @@ function handleSubmitWord() {
           currentSquare.classList.add(colour);
         }, interval * index);
       })
-      if (word == wordToBeGuessed) {
-        const winScreen = document.querySelector(".win-screen");
-        winScreen.classList.add("show");
-      }
-      else {
-        guessedWords.push([]);
-      }
-      if (guessedWords.length == 7){
+      guessedWords.push([]);
+      if (guessedWords.length == 7 && word != wordToBeGuessed){
         window.alert(`Sorry, you have no more guesses. The word was ${wordToBeGuessed}`)
       }
     }
