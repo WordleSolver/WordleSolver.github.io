@@ -36,8 +36,17 @@ body, html {
 }
 
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid var(--grey);
   margin-bottom: 0.4rem;
+  color: var(--white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 #title {

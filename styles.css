@@ -29,16 +29,55 @@ body, html {
 #container {
   display: flex;
   width: 100%;
+  min-height: 100%;
   height: 100%;
   flex-direction: row;
   justify-content: space-around;
   background-color: var(--background);
 }
 
+@media screen and (max-width: 800px) {
+  #container {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+  }
+}
+
+#menu {
+  display: grid;
+  margin: 10px;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.4rem;
+  gap: 50px;
+  grid-template-rows: repeat(5, 1fr);
+}
+
+#menu > a {
+  padding: 10px;
+  align-items: center;
+  display: flex;
+  background-color: #606262;
+  border-radius: 10px;
+}
+
+#menu > a:hover {
+  background-color: #808282;
+}
+
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid var(--grey);
   margin-bottom: 0.4rem;
   color: var(--white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 #title {
@@ -144,7 +183,7 @@ button.wide-button {
 }
 
 #suggestion-list {
-  width: 500px;
+  max-width: 500px;
 }
 
 #suggestion-list > li {
