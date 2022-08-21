@@ -160,7 +160,7 @@ button.wide-button {
 }
 
 #suggestion-list {
-  width: 500px;
+  max-width: 500px;
 }
 
 #suggestion-list > li {

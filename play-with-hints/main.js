@@ -47,9 +47,13 @@ const numToColour = {2:"green", 1:"yellow", 0:"grey"}
 
 const suggestionListElement = document.querySelector("#suggestion-list");
 
+function round(value, dp) {
+  return Math.round(value * (10 ** dp))/(10 ** dp);
+}
+
 function buildSuggestionListElement(suggestionList) {
   suggestionListElement.innerHTML = suggestionList.filter((arr, index) => index < 10).map(arr => {
-    return `<li><p>${arr[0]}</p><p>${arr[1]}</p></li>`
+    return `<li><p>${arr[0]}</p><p>${round(arr[1], 3)}</p></li>`
   }).join("");
 }
 
