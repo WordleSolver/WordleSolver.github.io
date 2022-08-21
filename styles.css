@@ -194,3 +194,30 @@ button.wide-button {
   font-size: 1.5rem;
   margin: 10px;
 }
+
+#info {
+  position: absolute;
+  width: 60%;
+  margin-top: 10%;
+  padding: 20px;
+  border-radius: 10px;
+  height: 60%;
+  margin-right: 20%;
+  margin-left: 20%;
+  background-color: #29292b;
+  box-shadow: 3px 3px 5px 2px #29292b;
+  border: 2px solid var(--light-grey);
+  color: var(--white);
+}
+
+.hide {
+  display: none !important;
+}
+
+.fa-solid {
+  font-size: 2rem;
+}
+
+#info > p {
+  margin-bottom: 0.8rem;
+}

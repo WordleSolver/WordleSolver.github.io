@@ -265,3 +265,15 @@ const keys = document.querySelectorAll(".keyboard-row button");
 keys.forEach(key => key.addEventListener("mousedown", keyPressed));
 
 document.addEventListener("keydown", keyDown);
+
+function toggleInfo() {
+  const infoElement = document.querySelector("#info");
+  infoElement.classList.toggle("hide");
+  localStorage.setItem("first_time","1");
+}
+
+let firstTime = localStorage.getItem("first_time");
+if(!firstTime) {
+  const infoElement = document.querySelector("#info");
+  infoElement.classList.remove("hide");
+}

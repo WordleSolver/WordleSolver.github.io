@@ -257,3 +257,14 @@ const keys = document.querySelectorAll(".keyboard-row button");
 keys.forEach(key => key.addEventListener("mousedown", keyPressed));
 
 document.addEventListener("keydown", keyDown);
+
+function toggleInfo() {
+  const infoElement = document.querySelector("#info");
+  infoElement.classList.toggle("hide");
+}
+
+let firstTime = localStorage.getItem("first_time");
+if(!firstTime) {
+  toggleInfo()
+  localStorage.setItem("first_time","1");
+}

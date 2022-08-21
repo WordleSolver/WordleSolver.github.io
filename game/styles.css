@@ -142,3 +142,7 @@ button.wide-button {
   border: none;
   background-color: var(--green) !important;
 }
+
+.fa-solid {
+  font-size: 2rem;
+}
