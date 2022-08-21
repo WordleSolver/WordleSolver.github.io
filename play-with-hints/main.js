@@ -119,7 +119,7 @@ function makeSuggestionList(remainingWordList) {
       console.log(Math.floor(100*(index/possibleWords.length)));
     }
     const expectedEntropy = entrapyArray(possiblityFreq);
-    return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 0.5 : 0)];
+    return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 1/wordsOfSmallerRemainingWordList.length : 0)];
   }).sort((a,b) => b[1] - a[1]);
   return suggestionList;
 }
