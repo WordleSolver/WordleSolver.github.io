@@ -145,7 +145,10 @@ console.log(firstSuggestionList);
 
 function updateWords(letter) { 
   if (letter == "enter") {
-    handleSubmitWord();
+    displayLoading();
+    setTimeout(() => {
+      handleSubmitWord();
+    }, 20);
     return
   } 
   const currentWord = getCurrentWordArr();
@@ -245,6 +248,7 @@ function handleSubmitWord() {
   else {
     window.alert("Word Must Be Five Letters");
   }
+  hideLoading();
 }
 
 function keyPressed(e) {
@@ -277,3 +281,16 @@ if(!firstTime) {
   const infoElement = document.querySelector("#info");
   infoElement.classList.remove("hide");
 }
+
+// the loading screen element
+const loaderContainer = document.querySelector('.loader-container');
+
+// displays the loading screen
+const displayLoading = () => {
+  loaderContainer.classList.remove('loader-container-hidden');
+};
+
+// removes the loading screen
+const hideLoading = () => {
+  loaderContainer.classList.add('loader-container-hidden');
+};
