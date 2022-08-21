@@ -58,11 +58,10 @@ a {
 }
 
 .square {
-  font-size: 2rem;
   font-weight: 700;
   aspect-ratio: 1 / 1;
   min-width: 60px;
-  font-size: 40px;
+  font-size: 45px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -70,6 +69,13 @@ a {
   color: var(--white);
   border: 2px solid var(--grey);
   text-transform: capitalize;
+}
+
+@media screen and (max-height: 800px) {
+  .square {
+    min-width: 40px;
+    font-size: 30px;
+  }
 }
 
 #board {

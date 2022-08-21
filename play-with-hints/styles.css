@@ -67,11 +67,10 @@ a {
 }
 
 .square {
-  font-size: 2rem;
   font-weight: 700;
   aspect-ratio: 1 / 1;
   min-width: 60px;
-  font-size: 40px;
+  font-size: 45px;
   font-weight: 700;
   display: flex;
   align-items: center;
