@@ -40,6 +40,10 @@ body, html {
   }
 }
 
+.ad-container {
+  padding: 20px;
+}
+
 header {
   display: flex;
   justify-content: space-between;
