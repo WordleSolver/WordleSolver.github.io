@@ -21,12 +21,13 @@ function createSquares() {
 function changeColourMap(e) {
   const squareID = e.target.id;
   const [row, column] = squareID.match(/\d/g);
-  console.log(squareID, row, column, guessedWords.length - 1);
   if (row == guessedWords.length - 1) {
-    console.log(currentColourMap[column]);
-    currentColourMap[column] = (currentColourMap[column] + 1)%4;
-    const colour = numToColour[currentColourMap[column]];
-    e.target.classList = "square " + colour;
+    if (currentColourMap.join("") == 33333) {
+      currentColourMap = [0,0,0,0,0]
+    } else {
+      currentColourMap[column] = (currentColourMap[column] + 1)%4;
+    }
+    e.target.parentElement.childNodes.forEach((child, index) => child.classList = "square " + numToColour[currentColourMap[index]]);
   }
 }
 
