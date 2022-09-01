@@ -61,6 +61,8 @@ const suggestionListElement = document.querySelector("#suggestion-list");
 
 let currentColourMap = [3, 3, 3, 3, 3];
 
+let greyLetters = [];
+
 let changeingColours = false;
 
 function round(value, dp) {
@@ -115,15 +117,29 @@ for (let a = 0; a < 3; a++) {
 
 function makeSuggestionList(remainingWordList) {
   const wordsOfSmallerRemainingWordList = remainingWordList.filter(word => possibleWords.includes(word));
-  const suggestionList = possibleWords.map((word, index) => {
-    const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
-    if (index%50 == 1) {
-      console.log(Math.floor(100*(index/possibleWords.length)));
-    }
-    const expectedEntropy = entrapyArray(possiblityFreq);
-    return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 1/wordsOfSmallerRemainingWordList.length : 0)];
-  }).sort((a,b) => b[1] - a[1]);
-  return suggestionList;
+  const reducedPossibleWords = possibleWords.filter(possibleWord => !possibleWord.split("").some(letter => greyLetters.includes(letter)));
+  if (wordsOfSmallerRemainingWordList.length > 50) {
+    const suggestionList = reducedPossibleWords.map((word, index) => {
+      const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
+      if (index%5 == 1) {
+        console.log(Math.floor(100*(index/reducedPossibleWords.length)));
+      }
+      const expectedEntropy = entrapyArray(possiblityFreq);
+      return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 1/wordsOfSmallerRemainingWordList.length : 0)];
+    }).sort((a,b) => b[1] - a[1]);
+    return suggestionList;
+  }
+  else {
+    const suggestionList = possibleWords.map((word, index) => {
+      const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
+      if (index%50 == 1) {
+        console.log(Math.floor(100*(index/possibleWords.length)));
+      }
+      const expectedEntropy = entrapyArray(possiblityFreq);
+      return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 1/wordsOfSmallerRemainingWordList.length : 0)];
+    }).sort((a,b) => b[1] - a[1]);
+    return suggestionList;
+  }
 }
 
 function updateWords(letter) { 
@@ -214,8 +230,8 @@ function handleSubmitWord() {
       const word = currentWord.join("");
 
       if (validWords.includes(word)) {
-        const interval = 150;
         const row = guessedWords.length - 1;
+        greyLetters = [... greyLetters, ...word.split("").filter((letter, index) => currentColourMap[index] == 0)]
         reducedWordList = findRemaingWord(word, currentColourMap, reducedWordList);
         buildSuggestionListElement(makeSuggestionList(reducedWordList)); 
         const entrapyRemaining = entrapyArray(reducedWordList.map(word => 1));
