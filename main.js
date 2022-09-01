@@ -118,7 +118,7 @@ for (let a = 0; a < 3; a++) {
 function makeSuggestionList(remainingWordList) {
   const wordsOfSmallerRemainingWordList = remainingWordList.filter(word => possibleWords.includes(word));
   const reducedPossibleWords = possibleWords.filter(possibleWord => !possibleWord.split("").some(letter => greyLetters.includes(letter)));
-  if (wordsOfSmallerRemainingWordList.length > 50 && reducedPossibleWords >= 1) {
+  if (wordsOfSmallerRemainingWordList.length > 50 && reducedPossibleWords.length >= 1) {
     const suggestionList = reducedPossibleWords.map((word, index) => {
       const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
       if (index%5 == 1) {
