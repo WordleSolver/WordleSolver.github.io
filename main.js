@@ -65,12 +65,20 @@ let greyLetters = [];
 
 let changeingColours = false;
 
+let currentSuggestionList = firstSuggestionList;
+
+let hard = false;
+
 function round(value, dp) {
   return Math.round(value * (10 ** dp))/(10 ** dp);
 }
 
 function buildSuggestionListElement(suggestionList) {
-  suggestionListElement.innerHTML = suggestionList.filter((arr, index) => index < 10).map(arr => {
+  tempSuggestionList = suggestionList;
+  if (hard) {
+    tempSuggestionList = tempSuggestionList.filter(arr => reducedWordList.includes(arr[0]))
+  }
+  suggestionListElement.innerHTML = tempSuggestionList.filter((arr, index) => index < 10).map(arr => {
     return `<li><p>${arr[0]}</p><p>${round(arr[1], 3)}</p></li>`
   }).join("");
 }
@@ -140,6 +148,11 @@ function makeSuggestionList(remainingWordList) {
     }).sort((a,b) => b[1] - a[1]);
     return suggestionList;
   }
+}
+
+function toggleHard() {
+  hard = !hard;
+  buildSuggestionListElement(currentSuggestionList)
 }
 
 function updateWords(letter) { 
@@ -233,7 +246,8 @@ function handleSubmitWord() {
         const row = guessedWords.length - 1;
         greyLetters = [... greyLetters, ...word.split("").filter((letter, index) => currentColourMap[index] == 0)]
         reducedWordList = findRemaingWord(word, currentColourMap, reducedWordList);
-        buildSuggestionListElement(makeSuggestionList(reducedWordList)); 
+        currentSuggestionList = makeSuggestionList(reducedWordList)
+        buildSuggestionListElement(currentSuggestionList); 
         const entrapyRemaining = entrapyArray(reducedWordList.map(word => 1));
         console.log(entrapyRemaining);
         guessedWords.push([]);

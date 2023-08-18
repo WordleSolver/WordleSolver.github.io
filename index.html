@@ -33,6 +33,7 @@
     <p>This solver will provide a list of the best words and a list of the best options and a score telling you how useful they are.</p>
     <p>To use this solver type in the word you put in to wordle. Then click on the squares to toggle their color until they match what you got in wordle. Then press enter to calculate the next best words.</p>
     <p>Please enjoy the website and for any queries contact me at <a href="mailto:WordleSolver@outlook.com" style="text-decoration: underline;">WordleSolver@outlook.com</a> or raise an issue on my <a href="https://github.com/WordleSolver/WordleSolver.github.io" target="_blank" style="text-decoration: underline;">GitHub</a></p>
+    <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="lachydauth" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
   </div>
   <div id="container">
     <div id="game">
@@ -95,7 +96,10 @@
 
     </div>
     <div id="suggestions">
-      <header><h2>Suggestions</h2></header>
+      <header>
+        <h2>Suggestions</h2>
+        <button class="btn" onclick="toggleHard()">toggle hard mode</button>
+      </header>
       <ol id="suggestion-list"></ol>
       <div></div>
     </div>
