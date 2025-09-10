@@ -1,6 +1,7 @@
-// function to create game board squares
+// Override the shared.js createSquares function to match our needs
 function createSquares() {
   const gameBoard = document.querySelector("#board");
+  if (!gameBoard) return; // Safety check
 
   for (let i = 0; i < 6; i++) {
     const row = document.createElement("div");
@@ -31,7 +32,7 @@ function changeColourMap(e) {
   }
 }
 
-createSquares();
+// createSquares() is now called by shared.js after the board is created
 
 function arraysEqual(a, b) {
   if (a === b) return true;
@@ -77,52 +78,63 @@ buildSuggestionListElement(firstSuggestionList);
 
 let reducedWordList = [...possibleWords];
 
-const startingEntrapy = entrapyArray(reducedWordList.map(word => 1));
-console.log(startingEntrapy);
+const startingEntropy = entrapyArray(reducedWordList.map(word => 1));
+console.log("Starting entropy:", startingEntropy);
 
 function getCurrentWordArr() {
   const numberOfGuessedWords = guessedWords.length;
   return guessedWords[numberOfGuessedWords - 1];
 }
 
-function entrapyArray(array) {
-  array = array.filter(num => num != 0);
-  const total = array.reduce((a, b) => a + b, 0);
-  array = array.map(num => num/total);
-  return array.reduce((total, curr) => {
-    return total + ((Math.log2(1/curr))*curr);
-  },0);
+function entrapyArray(frequencyArray) {
+  // Filter out zero frequencies (no information value)
+  const nonZeroFreqs = frequencyArray.filter(freq => freq > 0);
+  
+  if (nonZeroFreqs.length === 0) return 0;
+  
+  // Calculate total count
+  const total = nonZeroFreqs.reduce((sum, freq) => sum + freq, 0);
+  
+  // Convert to probabilities and calculate entropy
+  return nonZeroFreqs.reduce((entropy, freq) => {
+    const probability = freq / total;
+    return entropy + (probability * Math.log2(1 / probability));
+  }, 0);
 }
 
-const possibleColourMaps = []
-let array = [0,0,0,0,0]
-for (let a = 0; a < 3; a++) {
-  array[0] = a;
-  for (let b = 0; b < 3; b++) {
-    array[1] = b;
-    for (let c = 0; c < 3; c++) {
-      array[2] = c;
-      for (let d = 0; d < 3; d++) {
-        array[3] = d;
-        for (let e = 0; e < 3; e++) {
-          array[4] = e;
-          possibleColourMaps.push([...array]);
-        }
-      }
-    }
-  }
-}
+// We no longer need to pre-generate all possible color maps
+// Instead, we'll compute actual color maps for each word
 
 function makeSuggestionList(remainingWordList) {
-  const wordsOfSmallerRemainingWordList = remainingWordList.filter(word => possibleWords.includes(word));
-  const suggestionList = wordsOfSmallerRemainingWordList.map((word, index) => {
-    const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
-    if (index%50 == 1) {
-      console.log(Math.floor(100*(index/possibleWords.length)));
+  const possibleGuessWords = remainingWordList.filter(word => possibleWords.includes(word));
+  
+  const suggestionList = possibleGuessWords.map((guessWord, index) => {
+    // Show progress for long calculations
+    if (index % 50 === 1) {
+      console.log(`Progress: ${Math.floor(100 * (index / possibleGuessWords.length))}%`);
     }
-    const expectedEntropy = entrapyArray(possiblityFreq);
-    return [word, expectedEntropy];
-  }).sort((a,b) => b[1] - a[1]);
+    
+    // Instead of testing all 243 possible color maps,
+    // compute actual color maps for each remaining word
+    const colorMapGroups = new Map();
+    
+    for (const targetWord of remainingWordList) {
+      const colorMap = createColourMap(guessWord, targetWord);
+      const colorMapKey = colorMap.join("");
+      
+      if (!colorMapGroups.has(colorMapKey)) {
+        colorMapGroups.set(colorMapKey, 0);
+      }
+      colorMapGroups.set(colorMapKey, colorMapGroups.get(colorMapKey) + 1);
+    }
+    
+    // Convert group counts to frequency array for entropy calculation
+    const possibilityFreq = Array.from(colorMapGroups.values());
+    const expectedEntropy = entrapyArray(possibilityFreq);
+    
+    return [guessWord, expectedEntropy];
+  }).sort((a, b) => b[1] - a[1]);
+  
   return suggestionList;
 }
 
@@ -147,27 +159,43 @@ function updateWords(letter) {
   }
 }
 
-function createColourMap(guess, word) {
-  const guessArr = guess.split("");
-  const wordArr = word.split("");
-  return guessArr.map((letter, index) => {
-    if (letter === wordArr[index]) return 2;
-
-    let lettersInWord = 0;
-    wordArr.forEach(char => char === letter ? lettersInWord += 1 : null);
+function createColourMap(guess, targetWord) {
+  // Color codes: 0 = grey (not in word), 1 = yellow (in word, wrong position), 2 = green (correct position)
+  const guessLetters = guess.split("");
+  const targetLetters = targetWord.split("");
+  const colorMap = new Array(5);
   
-    for (let i = 0; i < index; i++) {
-      if (guessArr[i] === letter) lettersInWord -= 1;
+  // Count available letters in target word (excluding already matched green positions)
+  const availableLetters = new Map();
+  for (let i = 0; i < 5; i++) {
+    const letter = targetLetters[i];
+    availableLetters.set(letter, (availableLetters.get(letter) || 0) + 1);
+  }
+  
+  // First pass: mark green (exact matches) and reduce available letter counts
+  for (let i = 0; i < 5; i++) {
+    if (guessLetters[i] === targetLetters[i]) {
+      colorMap[i] = 2; // green
+      availableLetters.set(guessLetters[i], availableLetters.get(guessLetters[i]) - 1);
     }
+  }
   
-    for (let i = index + 1; i < 5; i++) {
-      if (guessArr[i] === letter && wordArr[i] === letter) lettersInWord -= 1;
+  // Second pass: mark yellow and grey for non-green positions
+  for (let i = 0; i < 5; i++) {
+    if (colorMap[i] === 2) continue; // already green
+    
+    const letter = guessLetters[i];
+    const availableCount = availableLetters.get(letter) || 0;
+    
+    if (availableCount > 0) {
+      colorMap[i] = 1; // yellow
+      availableLetters.set(letter, availableCount - 1);
+    } else {
+      colorMap[i] = 0; // grey
     }
+  }
   
-    if (0 < lettersInWord) return 1;
-  
-    return 0;
-  });
+  return colorMap;
 }
 
 function getTileColour(letter, index, word) {
@@ -190,18 +218,44 @@ function getTileColour(letter, index, word) {
   return "grey";
 }
 
-function findRemaingWord(guess, currentColourMap, reducedWordList) {
-  const currentColourMapStr = currentColourMap.join("");
-  return reducedWordList.filter(word => {
-    return currentColourMapStr === createColourMap(guess, word).join("");
+function findRemainingWords(guess, currentColourMap, wordList) {
+  // Quick optimization: if we have grey letters (0), filter out words containing them first
+  const greyLetters = new Set();
+  const yellowLetters = new Set();
+  const greenLetters = new Set();
+  
+  for (let i = 0; i < 5; i++) {
+    const letter = guess[i];
+    if (currentColourMap[i] === 0) {
+      greyLetters.add(letter);
+    } else if (currentColourMap[i] === 1) {
+      yellowLetters.add(letter);
+    } else if (currentColourMap[i] === 2) {
+      greenLetters.add(letter);
+    }
+  }
+  
+  return wordList.filter(word => {
+    // Quick elimination: if word contains any grey letters (that aren't also yellow/green), reject it
+    for (const greyLetter of greyLetters) {
+      if (!yellowLetters.has(greyLetter) && !greenLetters.has(greyLetter) && word.includes(greyLetter)) {
+        return false;
+      }
+    }
+    
+    // Full color map comparison for remaining words
+    const wordColorMap = createColourMap(guess, word);
+    return currentColourMap.every((color, index) => color === wordColorMap[index]);
   });
 }
 
-function quickFindRemaingWord(guess, currentColourMap, reducedWordList) {
-  const currentColourMapStr = currentColourMap.join("");
-  return reducedWordList.filter(word => {
-    return currentColourMapStr === createColourMap(guess, word).join("");
-  });
+// Keep original function name for compatibility but use optimized version
+function findRemaingWord(guess, currentColourMap, wordList) {
+  return findRemainingWords(guess, currentColourMap, wordList);
+}
+
+function quickFindRemaingWord(guess, currentColourMap, wordList) {
+  return findRemainingWords(guess, currentColourMap, wordList);
 }
 
 
@@ -255,10 +309,22 @@ document.addEventListener("keydown", keyDown);
 
 // toggleInfo function is now provided by shared.js
 
-let firstTime = localStorage.getItem("first_time");
-if(!firstTime) {
-  const infoElement = document.querySelector("#info");
-  infoElement.classList.remove("hide");
+// Initialize first-time info display when DOM is ready
+function initializeHardMode() {
+  let firstTime = localStorage.getItem("first_time");
+  if(!firstTime) {
+    const infoElement = document.querySelector("#info");
+    if (infoElement) {
+      infoElement.classList.remove("hide");
+    }
+  }
+}
+
+// Run initialization when DOM is fully loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeHardMode);
+} else {
+  initializeHardMode();
 }
 
 // the loading screen element
