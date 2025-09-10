@@ -48,7 +48,7 @@ function createKeyboard() {
 function createInfoModal(content, extraContent = '') {
   return `
     <div id="info" class="hide">
-      <header><h2>Information</h2><i class="icon icon-close" onclick="toggleInfo();" style="font-size: 1.5rem;"></i></header>
+      <header><h2>Information</h2><i class="icon icon-close" onclick="toggleInfo();" style="font-size: 1.5rem;">×</i></header>
       <p>This wordle solver can help you regularly get 3 or 4 in your daily wordles.</p>
       <p>This solver will provide a list of the best words and a list of the best options and a score telling you how useful they are.</p>
       <p>${content}</p>
