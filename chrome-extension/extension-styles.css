@@ -1,0 +1,332 @@
+/* Wordle Solver Chrome Extension Styles */
+
+#wordle-solver-extension {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  background: #ffffff;
+  border: 2px solid #d3d6da;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  z-index: 10000;
+  color: #1a1a1b;
+}
+
+.ws-header {
+  background: #6aaa64;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ws-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#ws-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  line-height: 1;
+}
+
+#ws-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ws-content {
+  padding: 15px;
+}
+
+.ws-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d3d6da;
+}
+
+#ws-remaining {
+  font-weight: 600;
+  color: #787c7e;
+  font-size: 13px;
+}
+
+.ws-hard-mode {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #787c7e;
+  cursor: pointer;
+}
+
+.ws-hard-mode input {
+  margin-right: 5px;
+}
+
+.ws-suggestions h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1b;
+}
+
+#ws-suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#ws-suggestion-list li {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  font-size: 13px;
+}
+
+#ws-suggestion-list li:hover {
+  background: #e9ecef;
+}
+
+#ws-suggestion-list li.ws-in-list {
+  background: #d4edda;
+  border-color: #c3e6cb;
+}
+
+#ws-suggestion-list li.ws-explore {
+  background: #fff3cd;
+  border-color: #ffeaa7;
+}
+
+.ws-rank {
+  font-weight: 600;
+  color: #6c757d;
+  width: 20px;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.ws-word {
+  font-weight: 700;
+  font-family: 'Clear Sans', monospace;
+  flex: 1;
+  color: #1a1a1b;
+  letter-spacing: 0.5px;
+}
+
+.ws-entropy {
+  font-size: 11px;
+  color: #6c757d;
+  margin-right: 5px;
+  min-width: 35px;
+  text-align: right;
+}
+
+.ws-icon {
+  font-size: 12px;
+}
+
+.ws-loading {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 10px;
+}
+
+.ws-no-suggestions {
+  text-align: center;
+  color: #6c757d;
+  padding: 10px;
+}
+
+.ws-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.ws-controls button {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d3d6da;
+  border-radius: 4px;
+  background: #f8f9fa;
+  color: #1a1a1b;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.1s ease;
+}
+
+.ws-controls button:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.ws-controls button:active {
+  background: #dee2e6;
+}
+
+/* Help Modal */
+#ws-help-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ws-modal-content {
+  background: white;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ws-modal-header {
+  background: #6aaa64;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ws-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+#ws-close-help {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.ws-modal-body {
+  padding: 20px;
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.ws-modal-body h4 {
+  margin: 0 0 10px 0;
+  color: #1a1a1b;
+}
+
+.ws-modal-body ul {
+  margin: 0 0 15px 0;
+  padding-left: 20px;
+}
+
+.ws-modal-body li {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.ws-modal-body p {
+  margin: 15px 0 0 0;
+  text-align: center;
+  color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #wordle-solver-extension {
+    width: 280px;
+    right: 5px;
+    top: 5px;
+  }
+  
+  .ws-content {
+    padding: 12px;
+  }
+  
+  .ws-modal-content {
+    width: 95%;
+    margin: 10px;
+  }
+}
+
+/* Dark mode support for sites that use it */
+@media (prefers-color-scheme: dark) {
+  #wordle-solver-extension {
+    background: #121213;
+    border-color: #3a3a3c;
+    color: #ffffff;
+  }
+  
+  .ws-content {
+    background: #121213;
+  }
+  
+  #ws-suggestion-list li {
+    background: #1a1a1b;
+    border-color: #3a3a3c;
+    color: #ffffff;
+  }
+  
+  #ws-suggestion-list li:hover {
+    background: #2a2a2b;
+  }
+  
+  #ws-suggestion-list li.ws-in-list {
+    background: #0d4a1f;
+    border-color: #1a6332;
+  }
+  
+  #ws-suggestion-list li.ws-explore {
+    background: #4a3d0d;
+    border-color: #6b5a1a;
+  }
+  
+  .ws-controls button {
+    background: #1a1a1b;
+    border-color: #3a3a3c;
+    color: #ffffff;
+  }
+  
+  .ws-controls button:hover {
+    background: #2a2a2b;
+  }
+  
+  .ws-modal-content {
+    background: #121213;
+    color: #ffffff;
+  }
+  
+  .ws-modal-body {
+    background: #121213;
+  }
+}
