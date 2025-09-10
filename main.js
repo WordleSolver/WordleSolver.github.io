@@ -283,11 +283,7 @@ keys.forEach(key => key.addEventListener("mousedown", keyPressed));
 
 document.addEventListener("keydown", keyDown);
 
-function toggleInfo() {
-  const infoElement = document.querySelector("#info");
-  infoElement.classList.toggle("hide");
-  localStorage.setItem("first_time","1");
-}
+// toggleInfo function is now provided by shared.js
 
 let firstTime = localStorage.getItem("first_time");
 if(!firstTime) {
