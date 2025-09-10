@@ -9,7 +9,6 @@
 
     gtag('config', 'G-CS3G16HP6X');
   </script>
-  <script src="https://kit.fontawesome.com/ed98a6bd6b.js" crossorigin="anonymous"></script>
   <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62ff6806af6eee0019fb97f6&product=sop' async='async'></script>
   <link
   rel="stylesheet"
@@ -20,6 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wordle With Hints</title>
 
+  <script src="../shared.js"></script>
   <script src="./main.js" defer></script>
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -27,73 +27,19 @@
   <div class="loader-container loader-container-hidden">
     <div class="spinner"></div>
   </div>
-  <div id="info" class="hide">
-    <header><h2>Information</h2><i class="fa-solid fa-circle-xmark" onclick="toggleInfo();" style="font-size: 1.5rem;"></i></header>
-    <p>This is a wordle clone with a built in solver can that help you regularly get the word with in 3 or 4.</p>
-    <p>This solver will provide a list of the best words and a list of the best options and a score telling you how useful they are.</p>
-    <p>Use this wordle tools as you would regular wordle</p>
-    <p><strong>Important</strong> - This solver can take up to 2 minutes to compute the suggestion list. In that time you may see a pop up saying the page is unresponsive <strong>Do Not</strong> close the page, press Wait instead.</p>
-    <p>Please enjoy the website and for any queries contact me at <a href="mailto:WordleSolver@outlook.com" style="text-decoration: underline;">WordleSolver@outlook.com</a> or raise an issue on my <a href="https://github.com/WordleSolver/WordleSolver.github.io" target="_blank" style="text-decoration: underline;">GitHub</a></p>
-    <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="lachydauth" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
-  </div>
+  <div id="info-placeholder" data-content="Use this wordle tools as you would regular wordle" data-extra='<p><strong>Important</strong> - This solver can take up to 2 minutes to compute the suggestion list. In that time you may see a pop up saying the page is unresponsive <strong>Do Not</strong> close the page, press Wait instead.</p>'></div>
   <div id="container">
     <div id="game">
 
-      <header>
-        <div id="left-buttons">
-          <i class="fa-solid fa-circle-question" id="info-button" onclick="toggleInfo();"></i>
-        </div>
-        <h1 id="title">Wordle With Hints</h1>
-        <div id="right-buttons">
-          <a class="fa-solid fa-arrow-rotate-right" href="./"></a>
-          <a class="fa-solid fa-bars" href="../menu.html"></a>
-        </div>
-      </header>
-
-      <div id="board-container">
-        <div id="board">
-
-        </div>
+      <div id="header-placeholder" 
+           data-title="Wordle With Hints"
+           data-left='<i class="icon icon-question" id="info-button" onclick="toggleInfo();"></i>'
+           data-right='<a class="icon icon-refresh" href="./"></a><a class="icon icon-menu" href="../menu.html"></a>'>
       </div>
 
-      <div id="keyboard-container">
-        <div class="keyboard-row">
-          <button data-key="q" id="q">q</button>
-          <button data-key="w" id="w">w</button>
-          <button data-key="e" id="e">e</button>
-          <button data-key="r" id="r">r</button>
-          <button data-key="t" id="t">t</button>
-          <button data-key="y" id="y">y</button>
-          <button data-key="u" id="u">u</button>
-          <button data-key="i" id="i">i</button>
-          <button data-key="o" id="o">o</button>
-          <button data-key="p" id="p">p</button>
-        </div>
-        <div class="keyboard-row">
-          <div class="spacer-half"></div>
-          <button data-key="a" id="a">a</button>
-          <button data-key="s" id="s">s</button>
-          <button data-key="d" id="d">d</button>
-          <button data-key="f" id="f">f</button>
-          <button data-key="g" id="g">g</button>
-          <button data-key="h" id="h">h</button>
-          <button data-key="j" id="j">j</button>
-          <button data-key="k" id="k">k</button>
-          <button data-key="l" id="l">l</button>
-          <div class="spacer-half"></div>
-        </div>
-        <div class="keyboard-row">
-          <button data-key="enter" class="wide-button">enter</button>
-          <button data-key="z" id="z">z</button>
-          <button data-key="x" id="x">x</button>
-          <button data-key="c" id="c">c</button>
-          <button data-key="v" id="v">v</button>
-          <button data-key="b" id="b">b</button>
-          <button data-key="n" id="n">n</button>
-          <button data-key="m" id="m">m</button>
-          <button data-key="del" class="wide-button">del</button>
-        </div>
-      </div>
+      <div id="board-placeholder"></div>
+
+      <div id="keyboard-placeholder"></div>
 
     </div>
     <div id="suggestions">
