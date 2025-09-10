@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle Game Demo - Test Extension</title>
+  <style>
+    body {
+      font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f8f9fa;
+    }
+    
+    .game-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .game-board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 5px;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
+    
+    .tile {
+      width: 62px;
+      height: 62px;
+      border: 2px solid #d3d6da;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: white;
+    }
+    
+    .tile.correct {
+      background: #6aaa64;
+      border-color: #6aaa64;
+      color: white;
+    }
+    
+    .tile.present {
+      background: #c9b458;
+      border-color: #c9b458;
+      color: white;
+    }
+    
+    .tile.absent {
+      background: #787c7e;
+      border-color: #787c7e;
+      color: white;
+    }
+    
+    .instructions {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .demo-controls {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .demo-controls button {
+      background: #6aaa64;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 5px;
+      font-weight: bold;
+    }
+    
+    .demo-controls button:hover {
+      background: #5a9a5a;
+    }
+  </style>
+</head>
+<body>
+  <div data-testid="game-app">
+    <div class="game-header">
+      <h1>Wordle Game Demo</h1>
+      <p>This page simulates a Wordle game to test the Chrome extension</p>
+    </div>
+    
+    <div class="instructions">
+      <h3>Testing the Chrome Extension:</h3>
+      <ol>
+        <li>Load the Chrome extension in Developer Mode</li>
+        <li>Refresh this page</li>
+        <li>You should see the Wordle Solver appear automatically</li>
+        <li>Click the buttons below to simulate game states</li>
+      </ol>
+    </div>
+    
+    <div class="game-board">
+      <div data-testid="row" class="row">
+        <div data-testid="tile" class="tile" data-state="correct">S</div>
+        <div data-testid="tile" class="tile" data-state="present">O</div>
+        <div data-testid="tile" class="tile" data-state="absent">A</div>
+        <div data-testid="tile" class="tile" data-state="present">R</div>
+        <div data-testid="tile" class="tile" data-state="absent">E</div>
+      </div>
+      <div data-testid="row" class="row">
+        <div data-testid="tile" class="tile" data-state="correct">S</div>
+        <div data-testid="tile" class="tile" data-state="absent">T</div>
+        <div data-testid="tile" class="tile" data-state="absent">I</div>
+        <div data-testid="tile" class="tile" data-state="correct">R</div>
+        <div data-testid="tile" class="tile" data-state="absent">S</div>
+      </div>
+      <div data-testid="row" class="row">
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+      </div>
+      <div data-testid="row" class="row">
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+      </div>
+      <div data-testid="row" class="row">
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+      </div>
+      <div data-testid="row" class="row">
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+        <div data-testid="tile" class="tile"></div>
+      </div>
+    </div>
+    
+    <div class="demo-controls">
+      <button onclick="simulateGuess1()">Simulate First Guess</button>
+      <button onclick="simulateGuess2()">Simulate Second Guess</button>
+      <button onclick="resetBoard()">Reset Board</button>
+    </div>
+  </div>
+
+  <script>
+    // Apply visual styles based on data-state
+    function updateTileStyles() {
+      document.querySelectorAll('[data-testid="tile"]').forEach(tile => {
+        const state = tile.getAttribute('data-state');
+        tile.className = `tile ${state || ''}`;
+      });
+    }
+    
+    function simulateGuess1() {
+      const tiles = document.querySelectorAll('[data-testid="row"]:first-child [data-testid="tile"]');
+      const guess = ['S', 'O', 'A', 'R', 'E'];
+      const states = ['correct', 'present', 'absent', 'present', 'absent'];
+      
+      tiles.forEach((tile, i) => {
+        tile.textContent = guess[i];
+        tile.setAttribute('data-state', states[i]);
+      });
+      updateTileStyles();
+    }
+    
+    function simulateGuess2() {
+      const tiles = document.querySelectorAll('[data-testid="row"]:nth-child(2) [data-testid="tile"]');
+      const guess = ['S', 'T', 'I', 'R', 'S'];
+      const states = ['correct', 'absent', 'absent', 'correct', 'absent'];
+      
+      tiles.forEach((tile, i) => {
+        tile.textContent = guess[i];
+        tile.setAttribute('data-state', states[i]);
+      });
+      updateTileStyles();
+    }
+    
+    function resetBoard() {
+      document.querySelectorAll('[data-testid="tile"]').forEach(tile => {
+        tile.textContent = '';
+        tile.removeAttribute('data-state');
+        tile.className = 'tile';
+      });
+    }
+    
+    // Initialize styles
+    updateTileStyles();
+  </script>
+</body>
+</html>

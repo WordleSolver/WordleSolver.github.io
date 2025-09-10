@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Wordle Solver Assistant",
+  "version": "1.0",
+  "description": "AI-powered Wordle solver that provides optimal word suggestions while you play",
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.nytimes.com/games/wordle/*",
+        "*://www.nytimes.com/games/wordle/*",
+        "*://wordlegame.org/*",
+        "*://wordle.com/*",
+        "*://wordleunlimited.com/*",
+        "*://wordleonline.com/*"
+      ],
+      "js": ["solver-algorithm.js", "content-script.js"],
+      "css": ["extension-styles.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Wordle Solver Assistant"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
