@@ -220,89 +220,35 @@ button.wide-button {
   display: none !important;
 }
 
-/* Vanilla CSS Icons to replace FontAwesome */
+/* Simplified text-based icons */
 .icon {
   display: inline-block;
   width: 2rem;
   height: 2rem;
   cursor: pointer;
   user-select: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .icon-close {
-  position: relative;
-}
-
-.icon-close::before,
-.icon-close::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 60%;
-  height: 2px;
-  background-color: currentColor;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.icon-close::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
+  /* Simple X symbol - content added directly in HTML */
 }
 
 .icon-question {
-  position: relative;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-question::before {
-  content: '?';
+  /* Simple ? symbol - content added directly in HTML */
 }
 
 .icon-refresh {
-  position: relative;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  border-top-color: transparent;
-  border-right-color: transparent;
-}
-
-.icon-refresh::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 0;
-  height: 0;
-  border-left: 4px solid currentColor;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
+  /* Simple refresh symbol - content added directly in HTML */
 }
 
 .icon-menu {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-}
-
-.icon-menu::before,
-.icon-menu::after {
-  content: '';
-  width: 60%;
-  height: 2px;
-  background-color: currentColor;
-}
-
-.icon-menu {
-  background: linear-gradient(currentColor, currentColor) center/60% 2px no-repeat;
+  /* Simple menu symbol - content added directly in HTML */
 }
 
 #info > p {
