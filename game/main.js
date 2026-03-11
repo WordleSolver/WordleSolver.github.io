@@ -116,7 +116,9 @@ function keyDown(e) {
   updateWords(letter);
 }
 
-const keys = document.querySelectorAll(".keyboard-row button");
-keys.forEach(key => key.addEventListener("mousedown", keyPressed));
-
 document.addEventListener("keydown", keyDown);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const keys = document.querySelectorAll(".keyboard-row button");
+  keys.forEach(key => key.addEventListener("mousedown", keyPressed));
+});

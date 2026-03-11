@@ -31,7 +31,7 @@ function changeColourMap(e) {
   }
 }
 
-createSquares();
+// createSquares() is called by shared.js's initializeSharedComponents() on DOMContentLoaded
 
 function arraysEqual(a, b) {
   if (a === b) return true;
@@ -278,18 +278,20 @@ function keyDown(e) {
   updateWords(letter);
 }
 
-const keys = document.querySelectorAll(".keyboard-row button");
-keys.forEach(key => key.addEventListener("mousedown", keyPressed));
-
 document.addEventListener("keydown", keyDown);
 
-// toggleInfo function is now provided by shared.js
+document.addEventListener("DOMContentLoaded", () => {
+  const keys = document.querySelectorAll(".keyboard-row button");
+  keys.forEach(key => key.addEventListener("mousedown", keyPressed));
 
-let firstTime = localStorage.getItem("first_time");
-if(!firstTime) {
-  const infoElement = document.querySelector("#info");
-  infoElement.classList.remove("hide");
-}
+  // toggleInfo function is now provided by shared.js
+
+  let firstTime = localStorage.getItem("first_time");
+  if(!firstTime) {
+    const infoElement = document.querySelector("#info");
+    if (infoElement) infoElement.classList.remove("hide");
+  }
+});
 
 // the loading screen element
 const loaderContainer = document.querySelector('.loader-container');

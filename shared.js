@@ -93,7 +93,6 @@ function createAnalyticsScripts() {
       gtag('js', new Date());
       gtag('config', 'G-CS3G16HP6X');
     </script>
-    <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62ff6806af6eee0019fb97f6&product=sop' async='async'></script>
   `;
 }
 
