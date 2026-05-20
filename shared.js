@@ -83,17 +83,120 @@ function createBoardContainer() {
   `;
 }
 
-// Create common tracking scripts
-function createAnalyticsScripts() {
-  return `
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CS3G16HP6X"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CS3G16HP6X');
-    </script>
+// Cookie consent and GA tracking
+const GA_MEASUREMENT_ID = "G-CS3G16HP6X";
+const GA_CONSENT_STORAGE_KEY = "cookie_consent_ga";
+
+function loadGoogleAnalytics() {
+  if (window.__gaLoaded) return;
+  window.__gaLoaded = true;
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() { window.dataLayer.push(arguments); };
+  window.gtag("js", new Date());
+  window.gtag("config", GA_MEASUREMENT_ID);
+
+  const gaScript = document.createElement("script");
+  gaScript.async = true;
+  gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(gaScript);
+}
+
+function hideCookieBanner() {
+  const banner = document.getElementById("cookie-consent-banner");
+  if (banner) {
+    banner.remove();
+  }
+}
+
+function setCookieConsent(consent) {
+  localStorage.setItem(GA_CONSENT_STORAGE_KEY, consent);
+  hideCookieBanner();
+  if (consent === "accepted") {
+    loadGoogleAnalytics();
+  }
+}
+
+function createCookieBanner() {
+  const banner = document.createElement("div");
+  banner.id = "cookie-consent-banner";
+  banner.innerHTML = `
+    <p>We use Google Analytics cookies to understand site usage. You can accept or reject analytics cookies.</p>
+    <div class="cookie-consent-actions">
+      <button type="button" id="cookie-consent-accept">Accept</button>
+      <button type="button" id="cookie-consent-reject">Reject</button>
+    </div>
   `;
+
+  const style = document.createElement("style");
+  style.id = "cookie-consent-style";
+  style.textContent = `
+    #cookie-consent-banner {
+      position: fixed;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 9999;
+      background: #1f1f1f;
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.9rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    }
+    #cookie-consent-banner p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      flex: 1 1 260px;
+    }
+    .cookie-consent-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .cookie-consent-actions button {
+      border: 0;
+      border-radius: 4px;
+      padding: 0.45rem 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #cookie-consent-accept {
+      background: #6aaa64;
+      color: #fff;
+    }
+    #cookie-consent-reject {
+      background: #3a3a3c;
+      color: #fff;
+      border: 1px solid #6b6b6b;
+    }
+  `;
+
+  if (!document.getElementById("cookie-consent-style")) {
+    document.head.appendChild(style);
+  }
+  document.body.appendChild(banner);
+
+  const acceptButton = document.getElementById("cookie-consent-accept");
+  const rejectButton = document.getElementById("cookie-consent-reject");
+  if (acceptButton) acceptButton.addEventListener("click", () => setCookieConsent("accepted"));
+  if (rejectButton) rejectButton.addEventListener("click", () => setCookieConsent("rejected"));
+}
+
+function initializeCookieConsent() {
+  const consent = localStorage.getItem(GA_CONSENT_STORAGE_KEY);
+  if (consent === "accepted") {
+    loadGoogleAnalytics();
+    return;
+  }
+  if (consent === "rejected") {
+    return;
+  }
+  createCookieBanner();
 }
 
 // Shared JavaScript functions
@@ -161,7 +264,11 @@ function initializeSharedComponents() {
 
 // Run initialization when DOM is loaded
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeSharedComponents);
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeSharedComponents();
+    initializeCookieConsent();
+  });
 } else {
   initializeSharedComponents();
+  initializeCookieConsent();
 }
