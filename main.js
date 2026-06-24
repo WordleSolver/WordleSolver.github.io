@@ -96,27 +96,42 @@ function getCurrentWordArr() {
 }
 
 function entrapyArray(array) {
-  array = array.filter(num => num != 0);
-  const total = array.reduce((a, b) => a + b, 0);
-  array = array.map(num => num/total);
-  return array.reduce((total, curr) => {
-    return total + ((Math.log2(1/curr))*curr);
-  },0);
+  // Early return for empty array
+  if (array.length === 0) return 0;
+  
+  let total = 0;
+  let nonZeroCount = 0;
+  
+  // Single pass to filter and sum
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== 0) {
+      total += array[i];
+      nonZeroCount++;
+    }
+  }
+  
+  if (total === 0 || nonZeroCount === 0) return 0;
+  
+  // Calculate entropy in single pass
+  let entropy = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== 0) {
+      const probability = array[i] / total;
+      entropy += probability * Math.log2(1 / probability);
+    }
+  }
+  
+  return entropy;
 }
 
-const possibleColourMaps = []
-let array = [0,0,0,0,0]
+// Pre-compute possible color maps more efficiently
+const possibleColourMaps = [];
 for (let a = 0; a < 3; a++) {
-  array[0] = a;
   for (let b = 0; b < 3; b++) {
-    array[1] = b;
     for (let c = 0; c < 3; c++) {
-      array[2] = c;
       for (let d = 0; d < 3; d++) {
-        array[3] = d;
         for (let e = 0; e < 3; e++) {
-          array[4] = e;
-          possibleColourMaps.push([...array]);
+          possibleColourMaps.push([a, b, c, d, e]);
         }
       }
     }
@@ -124,27 +139,43 @@ for (let a = 0; a < 3; a++) {
 }
 
 function makeSuggestionList(remainingWordList) {
-  const wordsOfSmallerRemainingWordList = remainingWordList.filter(word => possibleWords.includes(word));
-  const reducedPossibleWords = possibleWords.filter(possibleWord => !possibleWord.split("").some(letter => greyLetters.includes(letter)));
+  // Convert to Set for O(1) lookups instead of O(n) includes
+  const possibleWordsSet = new Set(possibleWords);
+  const greyLettersSet = new Set(greyLetters);
+  
+  const wordsOfSmallerRemainingWordList = remainingWordList.filter(word => possibleWordsSet.has(word));
+  const reducedPossibleWords = possibleWords.filter(possibleWord => {
+    // Check if word contains any grey letters using Set lookup
+    for (let i = 0; i < possibleWord.length; i++) {
+      if (greyLettersSet.has(possibleWord[i])) {
+        return false;
+      }
+    }
+    return true;
+  });
+  
+  const wordsOfSmallerSet = new Set(wordsOfSmallerRemainingWordList);
+  const bonusValue = wordsOfSmallerRemainingWordList.length > 0 ? 1/wordsOfSmallerRemainingWordList.length : 0;
+  
   if (wordsOfSmallerRemainingWordList.length > 20 && reducedPossibleWords.length >= 1) {
     const suggestionList = reducedPossibleWords.map((word, index) => {
       const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
-      if (index%5 == 1) {
+      if (index % 5 === 1) {
         console.log(Math.floor(100*(index/reducedPossibleWords.length)));
       }
       const expectedEntropy = entrapyArray(possiblityFreq);
-      return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 1/wordsOfSmallerRemainingWordList.length : 0)];
+      return [word, expectedEntropy + (wordsOfSmallerSet.has(word) ? bonusValue : 0)];
     }).sort((a,b) => b[1] - a[1]);
     return suggestionList;
   }
   else {
     const suggestionList = possibleWords.map((word, index) => {
       const possiblityFreq = possibleColourMaps.map(possibleColourMap => quickFindRemaingWord(word, possibleColourMap, wordsOfSmallerRemainingWordList).length);
-      if (index%50 == 1) {
+      if (index % 50 === 1) {
         console.log(Math.floor(100*(index/possibleWords.length)));
       }
       const expectedEntropy = entrapyArray(possiblityFreq);
-      return [word, expectedEntropy + (wordsOfSmallerRemainingWordList.includes(word) ? 1/wordsOfSmallerRemainingWordList.length : 0)];
+      return [word, expectedEntropy + (wordsOfSmallerSet.has(word) ? bonusValue : 0)];
     }).sort((a,b) => b[1] - a[1]);
     return suggestionList;
   }
@@ -177,26 +208,38 @@ function updateWords(letter) {
 }
 
 function createColourMap(guess, word) {
-  const guessArr = guess.split("");
-  const wordArr = word.split("");
-  return guessArr.map((letter, index) => {
-    if (letter === wordArr[index]) return 2;
-
-    let lettersInWord = 0;
-    wordArr.forEach(char => char === letter ? lettersInWord += 1 : null);
+  const result = [];
   
-    for (let i = 0; i < index; i++) {
-      if (guessArr[i] === letter) lettersInWord -= 1;
+  // Pre-count letter frequencies in word to avoid repeated iteration
+  const wordLetterCount = {};
+  for (let i = 0; i < 5; i++) {
+    const letter = word[i];
+    wordLetterCount[letter] = (wordLetterCount[letter] || 0) + 1;
+  }
+  
+  // First pass: mark exact matches and decrement counts
+  for (let i = 0; i < 5; i++) {
+    if (guess[i] === word[i]) {
+      result[i] = 2;
+      wordLetterCount[guess[i]]--;
+    } else {
+      result[i] = -1; // Placeholder
     }
+  }
   
-    for (let i = index + 1; i < 5; i++) {
-      if (guessArr[i] === letter && wordArr[i] === letter) lettersInWord -= 1;
+  // Second pass: handle wrong position and misses
+  for (let i = 0; i < 5; i++) {
+    if (result[i] === -1) {
+      if (wordLetterCount[guess[i]] > 0) {
+        result[i] = 1;
+        wordLetterCount[guess[i]]--;
+      } else {
+        result[i] = 0;
+      }
     }
+  }
   
-    if (0 < lettersInWord) return 1;
-  
-    return 0;
-  });
+  return result;
 }
 
 function getTileColour(letter, index, word) {
@@ -220,16 +263,28 @@ function getTileColour(letter, index, word) {
 }
 
 function findRemaingWord(guess, currentColourMap, reducedWordList) {
-  const currentColourMapStr = currentColourMap.join("");
   return reducedWordList.filter(word => {
-    return currentColourMapStr === createColourMap(guess, word).join("");
+    const wordColourMap = createColourMap(guess, word);
+    // Direct array comparison instead of string conversion
+    for (let i = 0; i < 5; i++) {
+      if (currentColourMap[i] !== wordColourMap[i]) {
+        return false;
+      }
+    }
+    return true;
   });
 }
 
 function quickFindRemaingWord(guess, currentColourMap, reducedWordList) {
-  const currentColourMapStr = currentColourMap.join("");
   return reducedWordList.filter(word => {
-    return currentColourMapStr === createColourMap(guess, word).join("");
+    const wordColourMap = createColourMap(guess, word);
+    // Direct array comparison instead of string conversion
+    for (let i = 0; i < 5; i++) {
+      if (currentColourMap[i] !== wordColourMap[i]) {
+        return false;
+      }
+    }
+    return true;
   });
 }
 
